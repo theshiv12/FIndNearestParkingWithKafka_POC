@@ -9,6 +9,9 @@ import nodemailer from 'nodemailer';
 import { AppDataSource } from './utils/data-source';
 import AppError from './utils/appError';
 import carParkRouter from './routes/carpark.routes';
+import { loadCarParkData } from './scripts/carpark_availabilty';
+import { startKafkaConsumer } from './subscribers/consumer';
+// import { updateCarParkAvailability } from './cron';
 
 AppDataSource.initialize()
   .then(async () => {
@@ -36,7 +39,7 @@ AppDataSource.initialize()
     );
 
     // ROUTES
-    app.use('/api/carPark', carParkRouter);
+    app.use('/carparks', carParkRouter);
 
     // HEALTH CHECKER
     app.get('/api/healthChecker', async (_, res: Response) => {
@@ -48,7 +51,6 @@ AppDataSource.initialize()
       });
     });
 
-    // UNHANDLED ROUTE
     app.all('*', (req: Request, res: Response, next: NextFunction) => {
       
       next(new AppError(404, `Route ${req.originalUrl} not found`));
@@ -66,7 +68,9 @@ AppDataSource.initialize()
         });
       }
     );
-
+    await loadCarParkData()
+    // await updateCarParkAvailability()
+    await startKafkaConsumer()
     const port = config.get<number>('port');
     app.listen(port);
     console.log(`Server started with pid: ${process.pid} on port: ${port}`);

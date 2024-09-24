@@ -1,28 +1,49 @@
-import { CreateDateColumn, UpdateDateColumn,  Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @Entity('carpark')
 export class CarPark {
   @PrimaryGeneratedColumn()
-  id:string;
+  id!: number;
 
-  @Column()
-  address:string;
+  @Column({ type: 'varchar', length: 255 })
+  carParkNo: string;
+
+  @Column({ type: 'varchar', length: 255 })
+  address: string;
+
+  @Column('float',)
+  latitude: number;
 
   @Column('float')
-  latitude:number;
+  longitude: number;
+
+  @Column({ type: 'int' })
+  totalLots: number;
+
+  @Column({ type: 'int' })
+  availableLots: number;
+
+  @Column({ type: 'varchar', length: 255 })
+  carParkType!: string;
+
+  @Column({ type: 'varchar', length: 255 })
+  typeOfParkingSystem!: string;
+
+  @Column({ type: 'boolean' })
+  shortTermParking!: boolean;
+
+  @Column({ type: 'boolean' })
+  freeParking!: boolean;
+
+  @Column({ type: 'boolean' })
+  nightParking!: boolean;
+
+  @Column({ type: 'int' })
+  carParkDecks!: number;
 
   @Column('float')
-  longitude:number;
+  gantryHeight!: number;
 
-  @Column()
-  total_lots:number;
-
-  @Column()
-  available_lots:number;
-
-  @CreateDateColumn()
-  created_at: Date;
-
-  @UpdateDateColumn()
-  updated_at: Date;
+  @Column({ type: 'boolean' })
+  carParkBasement!: boolean;
 }
